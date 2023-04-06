@@ -1,0 +1,6 @@
+ReadMap0 ReadMap configfiles/BeamTime/ReadMap0
+GetBeamTime0 GetBeamTime configfiles/BeamTime/ReadMap0
+ReadMap2 ReadMap configfiles/BeamTime/ReadMap2
+GetBeamTime2 GetBeamTime configfiles/BeamTime/ReadMap2
+
+

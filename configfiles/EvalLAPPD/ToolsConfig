@@ -1,0 +1,3 @@
+ReadFile ReadFile configfiles/EvalLAPPD/ReadFile
+EvaluateFile EvaluateFile configfiles/EvalLAPPD/ReadFile
+SaveNewStore SaveNewStore configfiles/EvalLAPPD/ReadFile
