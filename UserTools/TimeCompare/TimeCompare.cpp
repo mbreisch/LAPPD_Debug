@@ -14,7 +14,7 @@ bool TimeCompare::Initialise(std::string configfile, DataModel &data)
     if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
     if(!m_variables.Get("LAPPDID",LAPPDID)) LAPPDID=-1;
 
-    storename= "LAPPDStore" + to_string(LAPPDID);
+    storename= "LAPPDStore";
     entryname = "RAWLAPPD" + to_string(LAPPDID);
 
     Path = m_data->Path;
@@ -24,8 +24,6 @@ bool TimeCompare::Initialise(std::string configfile, DataModel &data)
 
 bool TimeCompare::Execute()
 {
-    if(m_data->SwitchToEval)
-    {
         string outpath = Path + "TimeCompare_L"+ to_string(LAPPDID);
         ofstream outfile(outpath.c_str(),ios_base::out | ios_base::trunc);
         try
@@ -43,6 +41,7 @@ bool TimeCompare::Execute()
                 tmpMap = m_data->RAWLAPPD2;
             }
             
+            if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " : Time Compare start ... ";}
             for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
             {
                 vector<unsigned short> TmpVector = it->second.RawWaveform;
@@ -71,12 +70,12 @@ bool TimeCompare::Execute()
 
                 outfile << full_ts << "," << it->second.Timestamp << "," << it->second.FailedReadCounter << endl;
             }
+            if(m_verbose>1){cout<<"Done!!"<<endl;}
         } catch (std::exception& e){
             std::cerr<<"Execute caught exception "<<e.what()<<std::endl;
             return false;
         }
         outfile.close();
-    }
 
     return true;
 }

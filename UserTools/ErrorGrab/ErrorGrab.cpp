@@ -15,7 +15,7 @@ bool ErrorGrab::Initialise(std::string configfile, DataModel &data)
 
     if(!m_variables.Get("LAPPDID",LAPPDID)) LAPPDID=-1;
 
-    storename= "LAPPDStore" + to_string(LAPPDID);
+    storename= "LAPPDStore";
     entryname = "RAWLAPPD" + to_string(LAPPDID);
 
     Path = m_data->Path;
@@ -25,61 +25,60 @@ bool ErrorGrab::Initialise(std::string configfile, DataModel &data)
 
 bool ErrorGrab::Execute()
 {
-    if(m_data->SwitchToEval)
+    string outpath = Path + "ErrorCodes_L"+ to_string(LAPPDID);
+    ofstream outfile(outpath.c_str(),ios_base::out | ios_base::trunc);
+    try
     {
-        string outpath = Path + "ErrorCodes_L"+ to_string(LAPPDID);
-        ofstream outfile(outpath.c_str(),ios_base::out | ios_base::trunc);
-        try
+        map<int,PsecData> tmpMap;
+
+        if(LAPPDID==0)
         {
-            map<int,PsecData> tmpMap;
+            tmpMap = m_data->RAWLAPPD0;
+        }else if(LAPPDID==1)
+        {
+            tmpMap = m_data->RAWLAPPD1;
+        }else if(LAPPDID==2)
+        {
+            tmpMap = m_data->RAWLAPPD2;
+        }
 
-            if(LAPPDID==0)
-            {
-                tmpMap = m_data->RAWLAPPD0;
-            }else if(LAPPDID==1)
-            {
-                tmpMap = m_data->RAWLAPPD1;
-            }else if(LAPPDID==2)
-            {
-                tmpMap = m_data->RAWLAPPD2;
-            }
+        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " : Errorcodes start ... ";}
+        for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
+        {
+            vector<unsigned int> errors = it->second.errorcodes;
 
-            for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
+            if(errors.size()==0)
             {
-                vector<unsigned int> errors = it->second.errorcodes;
-
-                if(errors.size()==0)
+                //skip
+            }else if(errors.size()==1)
+            {
+                if(errors.at(0)==0x00000000)
                 {
                     //skip
-                }else if(errors.size()==1)
-                {
-                    if(errors.at(0)==0x00000000)
-                    {
-                        //skip
-                    }else
-                    {
-                        outfile << "Event " << it->first << endl;
-                        outfile << std::hex << errors.at(0) << std::dec << endl;
-                        outfile << " --------- " << endl;
-                    }
                 }else
                 {
                     outfile << "Event " << it->first << endl;
-                        
-                    for(unsigned int ierr: errors)
-                    {
-                        outfile << std::hex << ierr << std::dec << endl;
-                    }
+                    outfile << std::hex << errors.at(0) << std::dec << endl;
                     outfile << " --------- " << endl;
                 }
+            }else
+            {
+                outfile << "Event " << it->first << endl;
+                    
+                for(unsigned int ierr: errors)
+                {
+                    outfile << std::hex << ierr << std::dec << endl;
+                }
+                outfile << " --------- " << endl;
             }
-        } catch (std::exception& e){
-            std::cerr<<"Execute caught exception "<<e.what()<<std::endl;
-            return false;
         }
-        outfile.close();
-
+        if(m_verbose>1){cout<<"Done!!"<<endl;}
+    } catch (std::exception& e){
+        std::cerr<<"Execute caught exception "<<e.what()<<std::endl;
+        return false;
     }
+    outfile.close();
+
     return true;
 }
 

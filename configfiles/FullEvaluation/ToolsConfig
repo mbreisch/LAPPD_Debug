@@ -1,10 +1,6 @@
-ReadFile ReadFile configfiles/FullEvaluation/ReadFile
-EvaluateFile EvaluateFile configfiles/FullEvaluation/ReadFile
-SaveNewStore SaveNewStore configfiles/FullEvaluation/ReadFile
-
-ReadMap0 ReadMap configfiles/FullEvaluation/LAPPD0
-#ReadMap1 ReadMap configfiles/FullEvaluation/LAPPD1
-ReadMap2 ReadMap configfiles/FullEvaluation/LAPPD2
+ReadMap0 ReadMap configfiles/FullEvaluation/ReadFile
+#ReadMap1 ReadMap configfiles/FullEvaluation/ReadFile
+ReadMap2 ReadMap configfiles/FullEvaluation/ReadFile
 
 GetTimeStamp0 GetTimeStamp configfiles/FullEvaluation/LAPPD0
 #GetTimeStamp1 GetTimeStamp configfiles/FullEvaluation/LAPPD1

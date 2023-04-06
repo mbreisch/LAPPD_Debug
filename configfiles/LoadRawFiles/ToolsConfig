@@ -1,0 +1,3 @@
+ReadFile ReadFile configfiles/LoadRawFiles/ReadFile
+EvaluateFile EvaluateFile configfiles/LoadRawFiles/ReadFile
+SaveNewStore SaveNewStore configfiles/LoadRawFiles/ReadFile

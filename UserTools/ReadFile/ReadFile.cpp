@@ -32,12 +32,6 @@ bool ReadFile::Initialise(std::string configfile, DataModel &data)
 
 bool ReadFile::Execute()
 {   
-    if(m_data->SwitchToEval)
-    {
-        m_data->vars.Set("StopLoop",1);
-        return true;
-    }
-
     //Create file location
     File = m_data->Path+Prefix+to_string(RunNumber)+"S0p"+to_string(PartNumber);
     std::ifstream chk_file(File);
@@ -45,21 +39,7 @@ bool ReadFile::Execute()
     {
         chk_file.close();
         cout << "File does not exist: " << File << endl;
-        m_data->SwitchToEval = true;
         return true;  
-    }
-
-    FileStore0 = m_data->Path+"RAWLAPPD0";
-    FileStore1 = m_data->Path+"RAWLAPPD1";
-    FileStore2 = m_data->Path+"RAWLAPPD2";
-    std::ifstream chk_file0(FileStore0);
-    std::ifstream chk_file1(FileStore1);
-    std::ifstream chk_file2(FileStore2);
-    if(chk_file0.good() && chk_file2.good() && chk_file1.good())
-    {
-        m_data->SwitchToEval = true;
-        m_data->vars.Set("StopLoop",1);
-        return true;
     }
 
     //Create raw boost-stores, since they are nested the raw data file is loaded here+

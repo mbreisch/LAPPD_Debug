@@ -1,6 +1,0 @@
-ReadMap0 ReadMap configfiles/GlobalTimeStamp/ReadMap0
-GetTimeStamp0 GetTimeStamp configfiles/GlobalTimeStamp/ReadMap0
-ReadMap2 ReadMap configfiles/GlobalTimeStamp/ReadMap2
-GetTimeStamp2 GetTimeStamp configfiles/GlobalTimeStamp/ReadMap2
-
-
