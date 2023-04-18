@@ -1,10 +1,10 @@
 #!/bin/bash
 
 init=1
-tooldaq=1
-boostflag=1
+tooldaq=0
+boostflag=0
 zmq=1
-final=1
+final=0
 rootflag=0
 
 while [ ! $# -eq 0 ]

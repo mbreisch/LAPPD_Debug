@@ -6,6 +6,7 @@
 #include <map>
 
 #include "Tool.h"
+#include "TTree.h"
 
 using namespace std;
 
@@ -36,6 +37,9 @@ class GetTimeStamp: public Tool {
     string entryname;
     int LAPPDID;
 
+
+    unsigned long long ts;
+    int ts_type;
 
 };
 

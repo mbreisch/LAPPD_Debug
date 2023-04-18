@@ -1,6 +1,6 @@
 ToolDAQPath=ToolDAQ
 
-CXXFLAGS= -fPIC -O3 #-Wpedantic -g -DDEBUG
+CXXFLAGS= -fPIC -O3 -Wpedantic -Wreturn-type -Wunused-result #-g -DDEBUG
 
 ZMQLib= -L $(ToolDAQPath)/zeromq-4.0.7/lib -lzmq 
 ZMQInclude= -I $(ToolDAQPath)/zeromq-4.0.7/include/ 
@@ -8,20 +8,24 @@ ZMQInclude= -I $(ToolDAQPath)/zeromq-4.0.7/include/
 BoostLib= -L $(ToolDAQPath)/boost_1_66_0/install/lib -lboost_date_time -lboost_serialization -lboost_iostreams
 BoostInclude= -I $(ToolDAQPath)/boost_1_66_0/install/include
 
-DataModelInclude = 
-DataModelLib = 
+RootInclude= -I `root-config --incdir`
 
-MyToolsInclude =
-MyToolsLib = 
+RootLib=  -L `root-config --libdir --glibs` -lCore -lRIO -lNet -lHist -lGraf -lGraf3d -lGpad -lTree -lRint -lPostscript -lMatrix -lPhysics -lMathCore -lThread -lMultiProc -pthread -lm -ldl -rdynamic -m64 -lGui -lGenVector -lMinuit -lGeom -lEG  -lEve #-lGL -lGLEW -lGLU
 
-YOCTOLib = #-L $(ToolDAQPath)/YOCTO/Binaries/linux/armhf -lyocto -lm -lpthread
-YOCTOInclude = #-I $(ToolDAQPath)/YOCTO/Sources
+DataModelInclude = $(RootInclude)
+DataModelLib = $(RootLib)
 
-all: lib/libStore.so lib/libLogging.so lib/libDataModel.so include/Tool.h lib/libMyTools.so lib/libServiceDiscovery.so lib/libToolChain.so main RemoteControl  NodeDaemon 
+MyToolsInclude =  $(RootInclude) #`python3-config --cflags` 
+MyToolsLib = -lcurl $(RootLib) #`python3-config --embed --libs`
+
+YOCTOLib = 
+YOCTOInclude = 
+
+all: lib/libStore.so lib/libLogging.so lib/libDataModel.so include/Tool.h lib/libMyTools.so lib/libServiceDiscovery.so lib/libToolChain.so main RemoteControl  NodeDaemon
 
 main: src/main.cpp | lib/libMyTools.so lib/libStore.so lib/libLogging.so lib/libToolChain.so lib/libDataModel.so lib/libServiceDiscovery.so
 	@echo -e "\e[38;5;226m\n*************** Making " $@ "****************\e[0m"
-	g++ $(CXXFLAGS) src/main.cpp -o main -I include -L lib -lStore -lMyTools -lToolChain -lDataModel -lLogging -lServiceDiscovery -lpthread $(DataModelInclude) $(DataModelib) $(MyToolsInclude)  $(MyToolsLib) $(ZMQLib) $(ZMQInclude)  $(BoostLib) $(BoostInclude) $(YOCTOLib) $(YOCTOInclude) -lusb-1.0
+	g++ $(CXXFLAGS) src/main.cpp -o main -I include -L lib -lStore -lMyTools -lToolChain -lDataModel -lLogging -lServiceDiscovery -lpthread $(DataModelInclude) $(DataModelib) $(MyToolsInclude)  $(MyToolsLib) $(ZMQLib) $(ZMQInclude)  $(BoostLib) $(BoostInclude) $(YOCTOLib) $(YOCTOInclude) -lusb-1.0 
 
 
 lib/libStore.so: $(ToolDAQPath)/ToolDAQFramework/src/Store/*

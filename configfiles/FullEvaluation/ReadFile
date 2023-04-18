@@ -1,6 +1,6 @@
-verbose 1
+verbose 3
 
-Path /mnt/s/ANNIE/ANNIE_RAWData/
-Prefix RAWDataR
-RunNumber 3670
+Path /mnt/a/FilterData/
+Prefix RAWLAPPD
+RunNumber 4250
 PartNumber 0

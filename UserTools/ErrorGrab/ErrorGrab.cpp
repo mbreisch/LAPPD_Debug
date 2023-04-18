@@ -19,13 +19,14 @@ bool ErrorGrab::Initialise(std::string configfile, DataModel &data)
     entryname = "RAWLAPPD" + to_string(LAPPDID);
 
     Path = m_data->Path;
+
     return true;
 }
 
 
 bool ErrorGrab::Execute()
 {
-    string outpath = Path + "ErrorCodes_L"+ to_string(LAPPDID);
+    string outpath = m_data->Path_Out + "ErrorCodes_L"+ to_string(LAPPDID)+".txt";
     ofstream outfile(outpath.c_str(),ios_base::out | ios_base::trunc);
     try
     {
@@ -57,7 +58,7 @@ bool ErrorGrab::Execute()
                     //skip
                 }else
                 {
-                    outfile << "Event " << it->first << endl;
+                    outfile << "Event " << it->first << " has " << it->second.FailedReadCounter << " failed reads!" << endl;
                     outfile << std::hex << errors.at(0) << std::dec << endl;
                     outfile << " --------- " << endl;
                 }
@@ -83,7 +84,9 @@ bool ErrorGrab::Execute()
 }
 
 
-bool ErrorGrab::Finalise(){
-
-  return true;
+bool ErrorGrab::Finalise()
+{
+    m_data->RootFile->Close();
+    cout<<"Run "<< m_data->RunNumber << " finished analysing!"<<endl;
+    return true;
 }

@@ -4,8 +4,10 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sys/stat.h>
 
 #include "Tool.h"
+
 
 
 using namespace std;
@@ -33,6 +35,7 @@ class ReadFile: public Tool {
  private:
 
     string Path;
+    string Path_Out;
     string File;
     string Prefix;
     string FileStore0;

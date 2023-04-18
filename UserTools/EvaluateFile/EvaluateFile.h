@@ -36,7 +36,7 @@ class EvaluateFile: public Tool {
     int iter_2;
 
     std::string newPATH;
-    string Path;
+    std::string Path;
 
 };
 

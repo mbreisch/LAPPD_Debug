@@ -1,7 +1,6 @@
 #ifndef PSECDATA_H
 #define PSECDATA_H
 
-#include "zmq.hpp"
 #include <SerialisableObject.h>
 #include <iostream>
 #include <vector>
@@ -20,9 +19,6 @@ class PsecData{
     PsecData();
     PsecData(unsigned int id);
     ~PsecData();
-
-    bool Send(zmq::socket_t* sock);
-    bool Receive(zmq::socket_t* sock);
 
     //General data
     unsigned int VersionNumber;

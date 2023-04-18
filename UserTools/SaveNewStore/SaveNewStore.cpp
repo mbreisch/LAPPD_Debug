@@ -13,7 +13,7 @@ bool SaveNewStore::Initialise(std::string configfile, DataModel &data)
 
     if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
 
-    Path = m_data->Path;
+    Path = m_data->Path_Out;
 
     int storeexists = m_data->Stores.count("LAPPDStore");
     if(storeexists==0)
@@ -27,6 +27,14 @@ bool SaveNewStore::Initialise(std::string configfile, DataModel &data)
 
 bool SaveNewStore::Execute()
 {
+    return true;
+}
+
+
+bool SaveNewStore::Finalise()
+{
+    cout<<"Run "<< m_data->RunNumber << " finished loading! Got "<< m_data->RAWLAPPD0.size() << endl;
+
     string newPATH;
     newPATH = Path + "RAWLAPPD";
     m_data->Stores["LAPPDStore"]->Set("RAWLAPPD0",m_data->RAWLAPPD0);
@@ -34,14 +42,6 @@ bool SaveNewStore::Execute()
     m_data->Stores["LAPPDStore"]->Set("RAWLAPPD2",m_data->RAWLAPPD2);
     m_data->Stores["LAPPDStore"]->Save(newPATH.c_str());
     m_data->Stores["LAPPDStore"]->Delete(); 
-
-    return true;
-}
-
-
-bool SaveNewStore::Finalise()
-{
-    cout<<"Run "<< m_data->RunNumber << " finished loading!"<<endl;
 
     m_data->Stores["LAPPDStore"]->Close();
     delete m_data->Stores["LAPPDStore"];

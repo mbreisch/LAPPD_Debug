@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "Tool.h"
+#include "TTree.h"
 
 using namespace std;
 /**
@@ -35,7 +36,14 @@ class GetBeamTime: public Tool {
     string entryname;
     int LAPPDID;
 
-
+    unsigned long long full_ts;
+    unsigned long long full_bts;
+    unsigned long long full_dt;
+    unsigned long long full_pps;
+    unsigned long long previous_pps_ts;
+    unsigned long long previous_evo_point;
+    long long ppsdt;
+    long long tevo;
 
 };
 

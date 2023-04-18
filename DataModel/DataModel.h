@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 
-//#include "TTree.h"
+#include "TTree.h"
 
 #include "Store.h"
 #include "BoostStore.h"
@@ -16,6 +16,9 @@
 
 #include <PsecData.h>
 
+#include "TFile.h"
+
+using namespace std;
 /**
 * \class DataModel
  *
@@ -56,10 +59,17 @@ class DataModel {
     map<int,PsecData> RAWLAPPD2;
 
     std::string Path;
+    std::string Path_Out;
     std::string Prefix;
     int RunNumber;
     bool SwitchToEval;
 
+    TFile* RootFile;
+    TTree *TTree_TimeStamp;
+    TTree *TTree_BeamTime;
+    TTree *TTree_PPS;
+    TTree *TTree_TimeEvolution;
+    
  private:
 
 

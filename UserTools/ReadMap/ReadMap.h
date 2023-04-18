@@ -6,6 +6,8 @@
 
 #include "Tool.h"
 
+#include "TTree.h"
+
 using namespace std;
 
 /**
@@ -35,6 +37,7 @@ class ReadMap: public Tool {
     string storename;
 
     int LAPPDID;
+    int RunNumber;
 
 
 

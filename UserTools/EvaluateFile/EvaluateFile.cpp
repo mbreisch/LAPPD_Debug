@@ -15,6 +15,7 @@ bool EvaluateFile::Initialise(std::string configfile, DataModel &data)
     if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
 
     Path = m_data->Path;
+    cout <<Path<<endl;
 
     iter_0 = 0;
     iter_1 = 0;
