@@ -40,6 +40,7 @@ class GetTimeStamp: public Tool {
 
     unsigned long long ts;
     int ts_type;
+    long Size;
 
 };
 

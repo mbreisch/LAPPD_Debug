@@ -23,6 +23,7 @@ bool GetTimeStamp::Initialise(std::string configfile, DataModel &data)
     m_data->TTree_TimeStamp->Branch("TimeStamp", &ts, "ts/L");
     m_data->TTree_TimeStamp->Branch("Type", &ts_type, "ts_type/i");
     m_data->TTree_TimeStamp->Branch("LAPPDID", &LAPPDID, "LAPPDID/i");
+    m_data->TTree_TimeStamp->Branch("Size", &Size, "Size/l");
 
     return true;
 }
@@ -46,8 +47,9 @@ bool GetTimeStamp::Execute()
         {
             tmpMap = m_data->RAWLAPPD2;
         }
+        Size = tmpMap.size();
         
-        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " : Global Timestamp start ... ";}
+        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " with " << Size << " entries: Global Timestamp start ... ";}
         for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
         {
             vector<unsigned short> TmpVector = it->second.RawWaveform;
@@ -74,13 +76,13 @@ bool GetTimeStamp::Execute()
                 ts = std::stoull(it->second.Timestamp.c_str(),nullptr,10);
                 ts_type = 2;
                 //outfile << it->second.Timestamp << "," << "chaos" << endl;
-                cout << "ALARM" << endl;
-                it->second.Print();
-                for(unsigned short k: it->second.AccInfoFrame)
-                {
-                    cout << std::hex << k << endl;
-                }
-                cout << std::dec;
+                // cout << "ALARM" << endl;
+                // it->second.Print();
+                // for(unsigned short k: it->second.AccInfoFrame)
+                // {
+                //     cout << std::hex << k << endl;
+                // }roo
+                // cout << std::dec;
             }
             m_data->TTree_TimeStamp->Fill();
         }

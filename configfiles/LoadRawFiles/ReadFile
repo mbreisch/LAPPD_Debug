@@ -1,7 +1,7 @@
-verbose 3
+verbose 1
 
 Path /mnt/a/RAWData/
 Path_Out /mnt/a/FilterData/
 Prefix RAWDataR
-RunNumber 4250
+RunNumber 4228
 PartNumber 0

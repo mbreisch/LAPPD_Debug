@@ -12,5 +12,6 @@ if (tool=="GetTimeStamp") ret=new GetTimeStamp;
 if (tool=="ReadFile") ret=new ReadFile;
 if (tool=="ReadMap") ret=new ReadMap;
 if (tool=="SaveNewStore") ret=new SaveNewStore;
+  if (tool=="TimeEvolution") ret=new TimeEvolution;
 return ret;
 }

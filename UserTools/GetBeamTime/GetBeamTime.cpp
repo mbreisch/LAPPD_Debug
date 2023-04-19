@@ -22,21 +22,14 @@ bool GetBeamTime::Initialise(std::string configfile, DataModel &data)
     m_data->TTree_BeamTime->Branch("Psec_TimeStamp", &full_ts, "full_ts/L");
     m_data->TTree_BeamTime->Branch("Beamgate_TimeStamp", &full_bts, "full_bts/L");
     m_data->TTree_BeamTime->Branch("DeltaT_TimeStamp", &full_dt, "full_dt/L");
-    m_data->TTree_TimeEvolution->Branch("TimeEvolution", &tevo, "tevo/i");
     m_data->TTree_PPS->Branch("PPS_TimeStamp", &full_pps, "full_pps/L");
-    m_data->TTree_PPS->Branch("Delta_T_PPS", &ppsdt, "ppsdt/l");
-
-    previous_pps_ts = 0;
-    previous_evo_point = 0;
-
+    
     return true;
 }
 
 
 bool GetBeamTime::Execute()
 {
-    //string outpath = Path + "BeamTime_L"+ to_string(LAPPDID);
-    //ofstream outfile(outpath.c_str(),ios_base::out | ios_base::trunc);
     try
     {
         map<int,PsecData> tmpMap;
@@ -51,8 +44,9 @@ bool GetBeamTime::Execute()
         {
             tmpMap = m_data->RAWLAPPD2;
         }
+        Size = tmpMap.size();
 
-        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " : Beamgate start ... ";}
+        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " with " << Size << " entries: Beamgate start ... ";}
         for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
         {
             vector<unsigned short> TmpVector = it->second.RawWaveform;
@@ -86,19 +80,9 @@ bool GetBeamTime::Execute()
                 ss_BTS << std::setfill('0') << std::setw(4) << std::hex << bts_p1;
                 full_bts = std::stoull(ss_BTS.str(),nullptr,16);
 
-                full_dt = full_ts - full_bts;
-                if(previous_evo_point==0)
-                {
-                    previous_evo_point = full_ts;
-                }          
-                if(previous_evo_point>full_ts)
-                {
-                    continue;
-                } 
-                tevo = (full_ts - previous_evo_point)/320000000;
-                previous_evo_point = full_ts; 
+                full_dt = (full_ts - full_bts)*3.125;
+
                 m_data->TTree_BeamTime->Fill();
-                m_data->TTree_TimeEvolution->Fill();
                 //outfile << full_ts << "," << full_bts << "," << dt << endl;
             }else if(TmpVector.size()==2*16)
             {
@@ -114,25 +98,8 @@ bool GetBeamTime::Execute()
                 ss_PPS << std::setfill('0') << std::setw(4) << std::hex << pps_p2;
                 ss_PPS << std::setfill('0') << std::setw(4) << std::hex << pps_p1;
                 full_pps = std::stoull(ss_PPS.str(),nullptr,16);
-                if(previous_pps_ts==0)
-                {
-                    previous_pps_ts = full_pps;
-                }
-                if(previous_evo_point==0)
-                {
-                    previous_evo_point = full_pps;
-                }
-                if(previous_pps_ts>full_pps || previous_evo_point>full_pps)
-                {
-                    continue;
-                }
-                tevo = (full_pps - previous_evo_point)/320000000; 
-                ppsdt = (full_pps - previous_pps_ts)/320000000;
 
-                previous_pps_ts = full_pps;
-                previous_evo_point = full_pps;
                 m_data->TTree_PPS->Fill();
-                m_data->TTree_TimeEvolution->Fill();
             }
         }
         if(m_verbose>1){cout<<"Done!!"<<endl;}
@@ -150,6 +117,5 @@ bool GetBeamTime::Finalise()
 {
     m_data->TTree_BeamTime->Write();
     m_data->TTree_PPS->Write();
-    m_data->TTree_TimeEvolution->Write();
     return true;
 }

@@ -44,6 +44,7 @@ class GetBeamTime: public Tool {
     unsigned long long previous_evo_point;
     long long ppsdt;
     long long tevo;
+    long Size;
 
 };
 

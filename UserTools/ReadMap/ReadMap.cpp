@@ -29,7 +29,9 @@ bool ReadMap::Initialise(std::string configfile, DataModel &data)
     m_data->TTree_TimeStamp = new TTree("GlobalTimeStamp", "GlobalTimeStamp");
     m_data->TTree_BeamTime = new TTree("BeamTime", "BeamTime");
     m_data->TTree_PPS = new TTree("PPS", "PPS");
-    m_data->TTree_TimeEvolution = new TTree("Time_Evolution","Time_Evolution");
+    m_data->TTree_FullTimeEvolution = new TTree("FullTimeEvolution","FullTimeEvolution");
+    m_data->TTree_DataTimeEvolution = new TTree("DataTimeEvolution","DataTimeEvolution");
+    m_data->TTree_PPSTimeEvolution = new TTree("PPSTimeEvolution","PPSTimeEvolution");
 
     return true;
 }

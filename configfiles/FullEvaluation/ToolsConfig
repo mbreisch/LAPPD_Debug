@@ -8,9 +8,9 @@ GetBeamTime0 GetBeamTime configfiles/FullEvaluation/LAPPD0
 #GetBeamTime1 GetBeamTime configfiles/FullEvaluation/LAPPD1
 #GetBeamTime2 GetBeamTime configfiles/FullEvaluation/LAPPD2
 
-#TimeCompare0 TimeCompare configfiles/FullEvaluation/LAPPD0
-#TimeCompare1 TimeCompare configfiles/FullEvaluation/LAPPD1
-#TimeCompare2 TimeCompare configfiles/FullEvaluation/LAPPD2
+TimeEvolution0 TimeEvolution configfiles/FullEvaluation/LAPPD0
+#TimeEvolution1 TimeEvolution configfiles/FullEvaluation/LAPPD1
+#TimeEvolution2 TimeEvolution configfiles/FullEvaluation/LAPPD2
 
 ErrorGrab0 ErrorGrab configfiles/FullEvaluation/LAPPD0
 #ErrorGrab1 ErrorGrab configfiles/FullEvaluation/LAPPD1

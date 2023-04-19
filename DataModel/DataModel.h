@@ -68,7 +68,9 @@ class DataModel {
     TTree *TTree_TimeStamp;
     TTree *TTree_BeamTime;
     TTree *TTree_PPS;
-    TTree *TTree_TimeEvolution;
+    TTree *TTree_FullTimeEvolution;
+    TTree *TTree_DataTimeEvolution;
+    TTree *TTree_PPSTimeEvolution;
     
  private:
 
