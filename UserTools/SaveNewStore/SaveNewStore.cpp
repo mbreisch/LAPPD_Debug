@@ -33,7 +33,7 @@ bool SaveNewStore::Execute()
 
 bool SaveNewStore::Finalise()
 {
-    cout<<"Run "<< m_data->RunNumber << " finished loading! Got "<< m_data->RAWLAPPD0.size() << endl;
+    cout<<"Run "<< m_data->RunNumber << " finished loading! Got "<< m_data->RAWLAPPD0.size() << " | " << m_data->RAWLAPPD1.size() << " | " << m_data->RAWLAPPD2.size() << endl;
 
     string newPATH;
     newPATH = Path + "RAWLAPPD";

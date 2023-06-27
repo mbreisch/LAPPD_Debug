@@ -24,64 +24,77 @@ bool TimeCompare::Initialise(std::string configfile, DataModel &data)
 
 bool TimeCompare::Execute()
 {
-        string outpath = Path + "TimeCompare_L"+ to_string(LAPPDID);
-        ofstream outfile(outpath.c_str(),ios_base::out | ios_base::trunc);
-        try
+    m_data->TTree_PPSinDelta = new TTree("PPSinDelta","PPSinDelta");
+    m_data->TTree_PPSinDelta->Branch("PPSinDelta", &PPSinDelta);
+    try
+    {
+        map<int,PsecData> tmpMap;
+
+        if(LAPPDID==0)
         {
-            map<int,PsecData> tmpMap;
-
-            if(LAPPDID==0)
-            {
-                tmpMap = m_data->RAWLAPPD0;
-            }else if(LAPPDID==1)
-            {
-                tmpMap = m_data->RAWLAPPD1;
-            }else if(LAPPDID==2)
-            {
-                tmpMap = m_data->RAWLAPPD2;
-            }
-            
-            if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " : Time Compare start ... ";}
-            for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
-            {
-                vector<unsigned short> TmpVector = it->second.RawWaveform;
-                if(m_verbose>1){cout<<"Entry "<<it->first<<" got "<<TmpVector.size()<<" size"<<endl;}
-                if(TmpVector.size()==2*7795)
-                {
-                    //Timestamp ts
-                    ts_p1 = TmpVector.at(1548);
-                    ts_p2 = TmpVector.at(3100);
-                    ts_p3 = TmpVector.at(4652);
-                    ts_p4 = TmpVector.at(6204);
-                }else if(TmpVector.size()==2*16)
-                {
-                    //Timestamp ts
-                    ts_p1 = TmpVector.at(5);
-                    ts_p2 = TmpVector.at(4);
-                    ts_p3 = TmpVector.at(3);
-                    ts_p4 = TmpVector.at(2);                    
-                }
-                stringstream ss_TS;
-                ss_TS << std::setfill('0') << std::setw(4) << std::hex << ts_p4;
-                ss_TS << std::setfill('0') << std::setw(4) << std::hex << ts_p3;
-                ss_TS << std::setfill('0') << std::setw(4) << std::hex << ts_p2;
-                ss_TS << std::setfill('0') << std::setw(4) << std::hex << ts_p1;
-                unsigned long long full_ts = std::stoull(ss_TS.str(),nullptr,16);
-
-                outfile << full_ts << "," << it->second.Timestamp << "," << it->second.FailedReadCounter << endl;
-            }
-            if(m_verbose>1){cout<<"Done!!"<<endl;}
-        } catch (std::exception& e){
-            std::cerr<<"Execute caught exception "<<e.what()<<std::endl;
-            return false;
+            tmpMap = m_data->RAWLAPPD0;
+        }else if(LAPPDID==1)
+        {
+            tmpMap = m_data->RAWLAPPD1;
+        }else if(LAPPDID==2)
+        {
+            tmpMap = m_data->RAWLAPPD2;
         }
-        outfile.close();
+        int Size = tmpMap.size();
+            
+        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " for LAPPD-ID " << LAPPDID << " with " << Size << " entries: Time Compare start ... ";}
+        for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
+        {
+            vector<unsigned short> TmpVector = it->second.RawWaveform;
+            if(m_verbose>2){cout<<"Entry "<<it->first<<" got "<<TmpVector.size()<<" size"<<endl;}
+            if(TmpVector.size()==2*7795)
+            {
+               continue;
+            }else if(TmpVector.size()==2*16)
+            {
+                //Timestamp ts
+                ts_pps1_p1 = TmpVector.at(5);
+                ts_pps1_p2 = TmpVector.at(4);
+                ts_pps1_p3 = TmpVector.at(3);
+                ts_pps1_p4 = TmpVector.at(2);                    
+            
+                ts_pps2_p1 = TmpVector.at(5+16);
+                ts_pps2_p2 = TmpVector.at(4+16);
+                ts_pps2_p3 = TmpVector.at(3+16);
+                ts_pps2_p4 = TmpVector.at(2+16);                    
+
+                stringstream ss_TS;
+                ss_TS << std::setfill('0') << std::setw(4) << std::hex << ts_pps1_p4;
+                ss_TS << std::setfill('0') << std::setw(4) << std::hex << ts_pps1_p3;
+                ss_TS << std::setfill('0') << std::setw(4) << std::hex << ts_pps1_p2;
+                ss_TS << std::setfill('0') << std::setw(4) << std::hex << ts_pps1_p1;
+                unsigned long long full_pps1 = std::stoull(ss_TS.str(),nullptr,16);
+
+                stringstream ss_TS2;
+                ss_TS2 << std::setfill('0') << std::setw(4) << std::hex << ts_pps2_p4;
+                ss_TS2 << std::setfill('0') << std::setw(4) << std::hex << ts_pps2_p3;
+                ss_TS2 << std::setfill('0') << std::setw(4) << std::hex << ts_pps2_p2;
+                ss_TS2 << std::setfill('0') << std::setw(4) << std::hex << ts_pps2_p1;
+                unsigned long long full_pps2 = std::stoull(ss_TS2.str(),nullptr,16);
+
+                PPSinDelta = ((long long)full_pps1 - (long long)full_pps2);
+                m_data->TTree_PPSinDelta->Fill();
+            }
+        }
+        if(m_verbose>1){cout<<"Done!!"<<endl;}
+    } catch (std::exception& e){
+        std::cerr<<"Execute caught exception "<<e.what()<<std::endl;
+        return false;
+    }
+
+    m_data->TTree_PPSinDelta->Write();
+    m_data->TTree_PPSinDelta->Reset();
 
     return true;
 }
 
 
-bool TimeCompare::Finalise(){
-
-  return true;
+bool TimeCompare::Finalise()
+{
+    return true;
 }

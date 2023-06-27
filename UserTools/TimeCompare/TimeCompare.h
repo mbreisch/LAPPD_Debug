@@ -29,10 +29,17 @@ class TimeCompare: public Tool {
 
 
  private:
-    unsigned short ts_p1;
-    unsigned short ts_p2;
-    unsigned short ts_p3;
-    unsigned short ts_p4;
+    unsigned short ts_pps1_p1;
+    unsigned short ts_pps1_p2;
+    unsigned short ts_pps1_p3;
+    unsigned short ts_pps1_p4;
+
+    unsigned short ts_pps2_p1;
+    unsigned short ts_pps2_p2;
+    unsigned short ts_pps2_p3;
+    unsigned short ts_pps2_p4;
+
+    long long PPSinDelta;
 
     string Path;
     string storename;

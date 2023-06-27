@@ -1,18 +1,29 @@
 ReadMap ReadMap configfiles/FullEvaluation/ReadFile
 
 GetTimeStamp0 GetTimeStamp configfiles/FullEvaluation/LAPPD0
-#GetTimeStamp1 GetTimeStamp configfiles/FullEvaluation/LAPPD1
-#GetTimeStamp2 GetTimeStamp configfiles/FullEvaluation/LAPPD2
-
 GetBeamTime0 GetBeamTime configfiles/FullEvaluation/LAPPD0
-#GetBeamTime1 GetBeamTime configfiles/FullEvaluation/LAPPD1
-#GetBeamTime2 GetBeamTime configfiles/FullEvaluation/LAPPD2
-
+GetTimeDifference0 GetTimeDifference configfiles/FullEvaluation/LAPPD0
 TimeEvolution0 TimeEvolution configfiles/FullEvaluation/LAPPD0
-#TimeEvolution1 TimeEvolution configfiles/FullEvaluation/LAPPD1
-#TimeEvolution2 TimeEvolution configfiles/FullEvaluation/LAPPD2
-
+TimeCompare0 TimeCompare configfiles/FullEvaluation/LAPPD0
 ErrorGrab0 ErrorGrab configfiles/FullEvaluation/LAPPD0
-#ErrorGrab1 ErrorGrab configfiles/FullEvaluation/LAPPD1
-#ErrorGrab2 ErrorGrab configfiles/FullEvaluation/LAPPD2
+
+GetTimeStamp1 GetTimeStamp configfiles/FullEvaluation/LAPPD1
+GetBeamTime1 GetBeamTime configfiles/FullEvaluation/LAPPD1
+GetTimeDifference1 GetTimeDifference configfiles/FullEvaluation/LAPPD1
+TimeEvolution1 TimeEvolution configfiles/FullEvaluation/LAPPD1
+TimeCompare1 TimeCompare configfiles/FullEvaluation/LAPPD1
+ErrorGrab1 ErrorGrab configfiles/FullEvaluation/LAPPD1
+
+GetTimeStamp2 GetTimeStamp configfiles/FullEvaluation/LAPPD2
+GetBeamTime2 GetBeamTime configfiles/FullEvaluation/LAPPD2
+GetTimeDifference2 GetTimeDifference configfiles/FullEvaluation/LAPPD2
+TimeEvolution2 TimeEvolution configfiles/FullEvaluation/LAPPD2
+TimeCompare2 TimeCompare configfiles/FullEvaluation/LAPPD2
+ErrorGrab2 ErrorGrab configfiles/FullEvaluation/LAPPD2
+
+#GetEventInfos0 GetEventInfos configfiles/FullEvaluation/LAPPD0
+#GetEventInfos1 GetEventInfos configfiles/FullEvaluation/LAPPD1
+#GetEventInfos2 GetEventInfos configfiles/FullEvaluation/LAPPD2
+
+EndAnalysis EndAnalysis configfiles/FullEvaluation/ReadFile
 

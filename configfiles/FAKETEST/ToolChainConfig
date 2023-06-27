@@ -21,10 +21,10 @@ service_publish_sec 5
 service_kick_sec 60
 
 ##### Tools To Add #####
-Tools_File configfiles/FullEvaluation/ToolsConfig
+Tools_File configfiles/FAKETEST/ToolsConfig
 
 ##### Run Type #####
-Inline 1
+Inline -1
 Interactive 0
 Remote 0
 

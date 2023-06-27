@@ -35,6 +35,8 @@ bool ReadFile::Initialise(std::string configfile, DataModel &data)
 
     m_data->SwitchToEval = false;
 
+    counter_of_doom = 0;
+
     return true;
 }
 
@@ -46,11 +48,11 @@ bool ReadFile::Execute()
     {
         File = m_data->Path+Prefix+to_string(RunNumber)+"S0p"+to_string(PartNumber);
         std::ifstream chk_file(File);
-        if(!chk_file.good())
+        if(!chk_file.good() || counter_of_doom>10)
         {
             chk_file.close();
             m_data->vars.Set("StopLoop",1);
-            cout << "File does not exist: " << File << endl;
+            cout << "File does not exist or there were enough empty files: " << File << endl;
             return true;  
         }  
     }catch(const std::exception& e)
@@ -81,6 +83,13 @@ bool ReadFile::Execute()
         LAPPDData->Header->Get("TotalEntries",entries);
         cout << "-----------------------------"<< endl;
         cout << "Working on partfile " << PartNumber << " has " << entries << " entries"<< endl;
+        if(entries==0)
+        {
+            counter_of_doom++;
+        }else
+        {
+            counter_of_doom = 0;
+        }
         for (int i_entry=0; i_entry < entries; i_entry++)
         {
             if(m_verbose>3){cout << "Starting entry " << i_entry << endl;}

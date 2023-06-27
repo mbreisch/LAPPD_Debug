@@ -14,16 +14,9 @@ bool GetTimeStamp::Initialise(std::string configfile, DataModel &data)
     if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
     if(!m_variables.Get("LAPPDID",LAPPDID)) LAPPDID=-1;
 
-    storename= "LAPPDStore";
-    entryname = "RAWLAPPD" + to_string(LAPPDID);
-
     Path = m_data->Path;
 
-    
-    m_data->TTree_TimeStamp->Branch("TimeStamp", &ts, "ts/L");
-    m_data->TTree_TimeStamp->Branch("Type", &ts_type, "ts_type/i");
-    m_data->TTree_TimeStamp->Branch("LAPPDID", &LAPPDID, "LAPPDID/i");
-    m_data->TTree_TimeStamp->Branch("Size", &Size, "Size/l");
+
 
     return true;
 }
@@ -31,8 +24,13 @@ bool GetTimeStamp::Initialise(std::string configfile, DataModel &data)
 
 bool GetTimeStamp::Execute()
 {
-    //string outpath = Path + "GlobalTimeStamp_L"+ to_string(LAPPDID);
-    //ofstream outfile(outpath.c_str(),ios_base::out | ios_base::trunc);
+    m_data->TTree_TimeStamp = new TTree("GlobalTimeStamp", "GlobalTimeStamp");
+    m_data->TTree_TimeStamp->Branch("TimeStamp", &ts, "ts/L");
+    m_data->TTree_TimeStamp->Branch("Type", &ts_type, "ts_type/I");
+    m_data->TTree_TimeStamp->Branch("LAPPDID", &LAPPDID, "LAPPDID/I");
+    m_data->TTree_TimeStamp->Branch("Size", &Size, "Size/l");
+
+    LAPPDID = LAPPDID;
     try
     {
         map<int,PsecData> tmpMap;
@@ -49,7 +47,7 @@ bool GetTimeStamp::Execute()
         }
         Size = tmpMap.size();
         
-        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " with " << Size << " entries: Global Timestamp start ... ";}
+        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " for LAPPD-ID " << LAPPDID << " with " << Size << " entries: Global Timestamp start ... ";}
         for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
         {
             vector<unsigned short> TmpVector = it->second.RawWaveform;
@@ -65,24 +63,14 @@ bool GetTimeStamp::Execute()
             {
                 ts = std::stoull(it->second.Timestamp.c_str(),nullptr,10);
                 ts_type = 0;
-                //outfile << it->second.Timestamp << "," << "pps" << endl;
             }else if(frame==7795)
             {
                 ts = std::stoull(it->second.Timestamp.c_str(),nullptr,10);
                 ts_type = 1;
-                //outfile << it->second.Timestamp << "," << "data" << endl;
             }else
             {
                 ts = std::stoull(it->second.Timestamp.c_str(),nullptr,10);
                 ts_type = 2;
-                //outfile << it->second.Timestamp << "," << "chaos" << endl;
-                // cout << "ALARM" << endl;
-                // it->second.Print();
-                // for(unsigned short k: it->second.AccInfoFrame)
-                // {
-                //     cout << std::hex << k << endl;
-                // }roo
-                // cout << std::dec;
             }
             m_data->TTree_TimeStamp->Fill();
         }
@@ -91,8 +79,8 @@ bool GetTimeStamp::Execute()
         std::cerr<<"Execute caught exception "<<e.what()<<std::endl;
         return false;
     }
-
-    //outfile.close();
+    m_data->TTree_TimeStamp->Write();
+    m_data->TTree_TimeStamp->Reset();
 
     return true;
 }
@@ -100,6 +88,5 @@ bool GetTimeStamp::Execute()
 
 bool GetTimeStamp::Finalise()
 {
-    m_data->TTree_TimeStamp->Write();
     return true;
 }

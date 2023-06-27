@@ -1,5 +1,7 @@
 {
     "files.associations": {
+        "*.set": "yaml",
+        "Settings": "jade",
         "algorithm": "cpp",
         "atomic": "cpp",
         "bit": "cpp",
@@ -74,6 +76,28 @@
         "list": "cpp",
         "strstream": "cpp",
         "unordered_map": "cpp",
-        "xhash": "cpp"
-    }
+        "xhash": "cpp",
+        "csignal": "cpp",
+        "bitset": "cpp",
+        "codecvt": "cpp",
+        "condition_variable": "cpp",
+        "coroutine": "cpp",
+        "future": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "numeric": "cpp",
+        "queue": "cpp",
+        "random": "cpp",
+        "regex": "cpp",
+        "scoped_allocator": "cpp",
+        "set": "cpp",
+        "shared_mutex": "cpp",
+        "stack": "cpp",
+        "typeindex": "cpp",
+        "unordered_set": "cpp",
+        "valarray": "cpp",
+        "cinttypes": "cpp",
+        "toolsconfig": "cpp"
+    },
+    "workbench.colorTheme": "Default Dark+"
 }

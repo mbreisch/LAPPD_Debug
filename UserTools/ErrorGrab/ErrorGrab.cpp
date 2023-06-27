@@ -80,13 +80,13 @@ bool ErrorGrab::Execute()
     }
     outfile.close();
 
+    std::cout << "-------------------------" << std::endl;
+
     return true;
 }
 
 
 bool ErrorGrab::Finalise()
-{
-    m_data->RootFile->Close();
-    cout<<"Run "<< m_data->RunNumber << " finished analysing!"<<endl;
+{    
     return true;
 }

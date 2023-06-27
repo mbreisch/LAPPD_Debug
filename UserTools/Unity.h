@@ -1,9 +1,16 @@
 #include <DummyTool.h>
+#include <EndAnalysis.h>
 #include <ErrorGrab.h>
 #include <EvaluateFile.h>
 #include <GetBeamTime.h>
+#include <GetEventInfos.h>
+#include <GetRunType.h>
+#include <GetTimeDifference.h>
 #include <GetTimeStamp.h>
 #include <ReadFile.h>
 #include <ReadMap.h>
 #include <SaveNewStore.h>
-#include "TimeEvolution.h"
+#include <TimeCompare.h>
+#include <TimeEvolution.h>
+#include "SimulateFrame.h"
+#include "CheckFrame.h"

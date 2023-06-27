@@ -28,6 +28,8 @@ class PsecData{
     //Received data from the ACC class
     vector<unsigned short> ReceiveData;
 
+    bool Stop;
+
     //To send data form ACC
     vector<int> BoardIndex;
     vector<unsigned short> AccInfoFrame;

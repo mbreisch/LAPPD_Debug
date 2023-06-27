@@ -43,9 +43,9 @@ class TimeEvolution: public Tool {
     unsigned long long full_pps;
     unsigned long long previous_pps_ts;
     unsigned long long previous_evo_point;
-    long long ppsdt;
-    long long datadt;
-    long long tevo;
+    float ppsdt;
+    float datadt;
+    float tevo;
     long Size;
 
 

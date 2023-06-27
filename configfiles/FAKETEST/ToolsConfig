@@ -1,0 +1,2 @@
+SimulateFrame SimulateFrame configfiles/FAKETEST/FakeConfig
+CheckFrame CheckFrame configfiles/FAKETEST/FakeConfig

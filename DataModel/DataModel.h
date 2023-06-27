@@ -71,6 +71,9 @@ class DataModel {
     TTree *TTree_FullTimeEvolution;
     TTree *TTree_DataTimeEvolution;
     TTree *TTree_PPSTimeEvolution;
+    TTree *TTree_PPS_RPi_dt;
+    TTree *TTree_PPSinDelta;
+
     
  private:
 

@@ -14,22 +14,22 @@ bool GetBeamTime::Initialise(std::string configfile, DataModel &data)
     if(!m_variables.Get("verbose",m_verbose)) m_verbose=1;
     if(!m_variables.Get("LAPPDID",LAPPDID)) LAPPDID=-1;
 
-    storename= "LAPPDStore";
-    entryname = "RAWLAPPD" + to_string(LAPPDID);
-
     Path = m_data->Path;
 
-    m_data->TTree_BeamTime->Branch("Psec_TimeStamp", &full_ts, "full_ts/L");
-    m_data->TTree_BeamTime->Branch("Beamgate_TimeStamp", &full_bts, "full_bts/L");
-    m_data->TTree_BeamTime->Branch("DeltaT_TimeStamp", &full_dt, "full_dt/L");
-    m_data->TTree_PPS->Branch("PPS_TimeStamp", &full_pps, "full_pps/L");
-    
     return true;
 }
 
 
 bool GetBeamTime::Execute()
 {
+    m_data->TTree_BeamTime = new TTree("BeamTime", "BeamTime");
+    m_data->TTree_PPS = new TTree("PPS", "PPS");
+    m_data->TTree_BeamTime->Branch("Psec_TimeStamp", &full_ts, "full_ts/L");
+    m_data->TTree_BeamTime->Branch("Beamgate_TimeStamp", &full_bts, "full_bts/L");
+    m_data->TTree_BeamTime->Branch("DeltaT_TimeStamp", &full_dt, "full_dt/L");
+    m_data->TTree_PPS->Branch("PPS_TimeStamp", &full_pps, "full_pps/L");
+    m_data->TTree_PPS->Branch("PPS_Counter", &PPS_Counter, "PPS_Counter/I");
+    
     try
     {
         map<int,PsecData> tmpMap;
@@ -46,7 +46,7 @@ bool GetBeamTime::Execute()
         }
         Size = tmpMap.size();
 
-        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " with " << Size << " entries: Beamgate start ... ";}
+        if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " for LAPPD-ID " << LAPPDID << " with " << Size << " entries: Beamgate start ... ";}
         for(std::map<int, PsecData>::iterator it=tmpMap.begin(); it!=tmpMap.end(); ++it)
         {
             vector<unsigned short> TmpVector = it->second.RawWaveform;
@@ -83,7 +83,6 @@ bool GetBeamTime::Execute()
                 full_dt = (full_ts - full_bts)*3.125;
 
                 m_data->TTree_BeamTime->Fill();
-                //outfile << full_ts << "," << full_bts << "," << dt << endl;
             }else if(TmpVector.size()==2*16)
             {
                 //Timestamp pps
@@ -99,6 +98,14 @@ bool GetBeamTime::Execute()
                 ss_PPS << std::setfill('0') << std::setw(4) << std::hex << pps_p1;
                 full_pps = std::stoull(ss_PPS.str(),nullptr,16);
 
+                unsigned short pps_c1 = TmpVector.at(9);
+                unsigned short pps_c2 = TmpVector.at(8);
+
+                stringstream ss_cPPS;
+                ss_cPPS << std::setfill('0') << std::setw(4) << std::hex << pps_c2;
+                ss_cPPS << std::setfill('0') << std::setw(4) << std::hex << pps_c1;
+                PPS_Counter = std::stoull(ss_cPPS.str(),nullptr,16);
+ 
                 m_data->TTree_PPS->Fill();
             }
         }
@@ -107,7 +114,12 @@ bool GetBeamTime::Execute()
         std::cerr<<"Execute caught exception "<<e.what()<<std::endl;
         return false;
     }
-    //outfile.close();
+
+    m_data->TTree_BeamTime->Write();
+    m_data->TTree_PPS->Write();
+
+    m_data->TTree_BeamTime->Reset();
+    m_data->TTree_PPS->Reset();
 
     return true;
 }
@@ -115,7 +127,5 @@ bool GetBeamTime::Execute()
 
 bool GetBeamTime::Finalise()
 {
-    m_data->TTree_BeamTime->Write();
-    m_data->TTree_PPS->Write();
     return true;
 }

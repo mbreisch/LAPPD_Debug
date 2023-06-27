@@ -17,10 +17,6 @@ bool TimeEvolution::Initialise(std::string configfile, DataModel &data)
     storename= "LAPPDStore";
     entryname = "RAWLAPPD" + to_string(LAPPDID);
 
-    m_data->TTree_FullTimeEvolution->Branch("FullTimeEvolution", &tevo, "tevo/i");
-    m_data->TTree_PPSTimeEvolution->Branch("PPSTimeEvolution", &ppsdt, "ppsdt/l");
-    m_data->TTree_DataTimeEvolution->Branch("DataTimeEvolution", &datadt, "datadt/l");
-
     previous_pps_ts = 0;
     previous_evo_point = 0;
 
@@ -30,6 +26,14 @@ bool TimeEvolution::Initialise(std::string configfile, DataModel &data)
 
 bool TimeEvolution::Execute()
 {
+    m_data->TTree_FullTimeEvolution = new TTree("FullTimeEvolution","FullTimeEvolution");
+    m_data->TTree_DataTimeEvolution = new TTree("DataTimeEvolution","DataTimeEvolution");
+    m_data->TTree_PPSTimeEvolution = new TTree("PPSTimeEvolution","PPSTimeEvolution");
+
+    m_data->TTree_FullTimeEvolution->Branch("FullTimeEvolution", &tevo, "tevo/F");
+    m_data->TTree_PPSTimeEvolution->Branch("PPSTimeEvolution", &ppsdt, "ppsdt/F");
+    m_data->TTree_DataTimeEvolution->Branch("DataTimeEvolution", &datadt, "datadt/F");
+
     map<int,PsecData> tmpMap;
     try
     {
@@ -49,8 +53,7 @@ bool TimeEvolution::Execute()
         return false;
     }
 
-    if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << " with " << Size << " entries: Beamgate start ... ";}
-
+    if(m_verbose>1){cout<<"Run "<< m_data->RunNumber << "for LAPPD-ID " << LAPPDID << " with " << Size << " entries: Time Evolution start ... ";}
     try
     {
         GetTimeEvolution(tmpMap,7795);
@@ -74,15 +77,19 @@ bool TimeEvolution::Execute()
     }
     if(m_verbose>1){cout<<"Done!!"<<endl;}
 
+    m_data->TTree_FullTimeEvolution->Write();
+    m_data->TTree_PPSTimeEvolution->Write();
+    m_data->TTree_DataTimeEvolution->Write();
+    m_data->TTree_FullTimeEvolution->Reset();
+    m_data->TTree_PPSTimeEvolution->Reset();
+    m_data->TTree_DataTimeEvolution->Reset();
+
     return true;
 }
 
 
 bool TimeEvolution::Finalise()
 {  
-    m_data->TTree_FullTimeEvolution->Write();
-    m_data->TTree_PPSTimeEvolution->Write();
-    m_data->TTree_DataTimeEvolution->Write();
     return true;
 }
 
@@ -141,12 +148,12 @@ void TimeEvolution::GetTimeEvolution(std::map<int, PsecData> tmpMap, int size)
 
         if(size==7795)
         {
-            datadt = (full_ts - previous_evo_point)/320000000;
+            datadt = (full_ts - previous_evo_point)/320000000.0;
             previous_evo_point = full_ts;   
             m_data->TTree_DataTimeEvolution->Fill();
         }else if(size==16)
         {
-            ppsdt = (full_ts - previous_evo_point)/320000000;
+            ppsdt = (full_ts - previous_evo_point)/320000000.0;
             previous_evo_point = full_ts; 
             m_data->TTree_PPSTimeEvolution->Fill();            
         }  
@@ -203,7 +210,7 @@ void TimeEvolution::GetFullTimeEvolution(std::map<int, PsecData> tmpMap)
             continue;
         }   
 
-        tevo = (full_ts - previous_evo_point)/320000000;
+        tevo = (full_ts - previous_evo_point)/320000000.0;
         previous_evo_point = full_ts; 
         m_data->TTree_FullTimeEvolution->Fill(); 
     }  
